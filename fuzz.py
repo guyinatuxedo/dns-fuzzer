@@ -200,7 +200,7 @@ def serverConnect():
 # Prints the help menu
 def helpMenu():
     print "Help Menu: "
-    print "-i <ip> or --remote-ip <ip>\t\t: Specify that <ip> is the IP address being fuzzed. Default 127.0.0.1"
+    print "-i <ip> or --remoteIP <ip>\t\t: Specify that <ip> is the IP address being fuzzed. Default 127.0.0.1"
     print "-p <port> or --port <port>\t\t: Specify that <port> is the port being fuzzed. Default 53"
     print "-f <x> or --fuzzed-data <x>\t\t: Specify that <x> prercent (out of 100) of packets sent are fuzzed. Default 50"
     print "-r <file> or --replay <file>\t\t: Specify to replay the file <file>."
