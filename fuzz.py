@@ -199,24 +199,24 @@ def serverConnect():
 
 # Prints the help menu
 def helpMenu():
-    print "Help Menu: "
-    print "-i <ip> or --remoteIP <ip>\t\t: Specify that <ip> is the IP address being fuzzed. Default 127.0.0.1"
-    print "-p <port> or --port <port>\t\t: Specify that <port> is the port being fuzzed. Default 53"
-    print "-f <x> or --fuzzed-data <x>\t\t: Specify that <x> prercent (out of 100) of packets sent are fuzzed. Default 50"
-    print "-r <file> or --replay <file>\t\t: Specify to replay the file <file>."
-    print "-m <seeds> or --max-seeds <seeds>\t: Specify that the max number of seeds to be saved in crash file is <seeds>. Default 20"
-    print "-t or --tcp\t\t\t\t: Specify to use tcp instead of udp."
-    print "-h or --help\t\t\t\t: Print the help menu."  
-    print "\nCrash Detection: Must pick one\n"
-    print "-n <name> or --pname <name>\t\t: Specify that the pid associated with the process name <name> is to be used."  
-    print "-d <pid> or --pid <pid>\t\t\t: Specify that the pid <pid> is to be used."
-    print "-c <x> or --conn-check <x>\t\t: Specify that <x> number of queries without response are to be used."
-    print "-e or --tcp-check\t\t\t: Specify that a tcp handshake is to be used. Must be with a tcp connection."
+    print("Help Menu: ")
+    print("-i <ip> or --remoteIP <ip>\t\t: Specify that <ip> is the IP address being fuzzed. Default 127.0.0.1")
+    print("-p <port> or --port <port>\t\t: Specify that <port> is the port being fuzzed. Default 53")
+    print("-f <x> or --fuzzed-data <x>\t\t: Specify that <x> prercent (out of 100) of packets sent are fuzzed. Default 50")
+    print("-r <file> or --replay <file>\t\t: Specify to replay the file <file>.")
+    print("-m <seeds> or --max-seeds <seeds>\t: Specify that the max number of seeds to be saved in crash file is <seeds>. Default 20")
+    print("-t or --tcp\t\t\t\t: Specify to use tcp instead of udp.")
+    print("-h or --help\t\t\t\t: Print the help menu."  )
+    print("\nCrash Detection: Must pick one\n")
+    print("-n <name> or --pname <name>\t\t: Specify that the pid associated with the process name <name> is to be used."  )
+    print("-d <pid> or --pid <pid>\t\t\t: Specify that the pid <pid> is to be used.")
+    print("-c <x> or --conn-check <x>\t\t: Specify that <x> number of queries without response are to be used.")
+    print("-e or --tcp-check\t\t\t: Specify that a tcp handshake is to be used. Must be with a tcp connection.")
     exit()
 
 # A helper function for when a cmd arg is bad
 def badArg(error):
-    print error
+    print(error)
     exit()
 
 # A helper function to set the pid
@@ -302,7 +302,7 @@ def parseArgs(argsRaw):
             except ValueError:
                 badArg("Fuzzed data argument is not an integer.")
         else:
-            print "Invalid arg found. Here's the help menu: "
+            print("Invalid arg found. Here's the help menu: ")
             helpMenu()        
 
 # Function which we use to send data
@@ -310,9 +310,9 @@ def serverSend(conn, packet):
     try:
         conn.send(packet)
     except socket.error as error:
-        print "Could not send packet: " + str(error)
+        print("Could not send packet: " + str(error))
     except:
-        print "Could not send packet"
+        print("Could not send packet")
     if checkConn == True:
         recvCheck(conn)
 
@@ -371,7 +371,7 @@ def pidCheck():
 def reportCrash():
     global replaying
     if replaying == False:
-        print "Crash detected"
+        print("Crash detected")
         outputFile = "outputFile.txt"
         x = 1
         while os.path.isfile(outputFile) == True:
@@ -383,7 +383,7 @@ def reportCrash():
             global savedArgs
             pickle.dump(seeds, outputFile)
             pickle.dump(savedArgs, outputFile)
-            print "Crashed seeds are: " + str(len(seeds))
+            print("Crashed seeds are: " + str(len(seeds)))
         except:
             badArg("Could not write replay file's data.")
     exit()
@@ -405,11 +405,11 @@ def replayCrash(filename):
     scanRecordFile("records")
 
     conn = serverConnect()
-    print "read seeds are: " + str(len(seeds))
+    print("read seeds are: " + str(len(seeds)))
     for i in xrange(len(seeds)):
-        print "replaing seed number: " + str(i)
+        print("replaing seed number: " + str(i))
         random.seed(seeds[i])
-        print "using seed: " + seeds[i]
+        print("using seed: " + seeds[i])
         fuzzing(conn)
         time.sleep(.1)
     badArg("Finished replaying file.")
@@ -916,11 +916,11 @@ def insert(data, insertData):
 
 # The function which handles the setup, and then loops fuzzing
 def setup():
-    print "Initializing fuzzer"
+    print("Initializing fuzzer")
     parseArgs(sys.argv[1:])
     conn = serverConnect()
     scanRecordFile("records")
-    print "Beginning fuzzing"
+    print("Beginning fuzzing")
     while True:
         rngSeed()        
         fuzzing(conn)
@@ -933,7 +933,7 @@ def fuzzing(conn):
     global fuzzedData
     x = random.randint(0, 100)
     if x >= fuzzedData:
-        print "Sending Non-Corrupted Data:"
+        print("Sending Non-Corrupted Data:")
         # Packet is not being fuzzed
         y = random.randint(0, 21)        
         if y < 18:
@@ -990,7 +990,7 @@ def fuzzing(conn):
                 packet += genCookie()                    
 
     else:
-        print "Sending Corrupted Data:"
+        print("Sending Corrupted Data:")
         # Packet is being fuzzed
         y = random.randint(0, 21)        
         if y < 18: 
@@ -1052,7 +1052,7 @@ def fuzzing(conn):
                 packet += genCookie()
 
     # Send the query
-    print "Length of Packet: " + str(len(packet))           
+    print("Length of Packet: " + str(len(packet)))           
     serverSend(conn, packet)
 
 if __name__ == "__main__":
